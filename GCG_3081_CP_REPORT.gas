@@ -1,0 +1,583 @@
+Program.Sub.ScreenSU.Start
+gui.SS_Form1..create
+gui.SS_Form1..caption("Capacity Planning/Schedule")
+gui.SS_Form1..size(4135,4055)
+gui.SS_Form1..position(0,0)
+gui.SS_Form1..event(unload,unload)
+gui.SS_Form1..alwaysontop(False)
+gui.SS_Form1..fontname("Arial")
+gui.SS_Form1..fontsize(8)
+gui.SS_Form1..forecolor(0)
+gui.SS_Form1..fontstyle(,,,,)
+gui.SS_Form1..BackColor(-2147483633)
+gui.SS_Form1..controlbox(True)
+gui.SS_Form1..maxbutton(False)
+gui.SS_Form1..minbutton(False)
+gui.SS_Form1..mousepointer(0)
+gui.SS_Form1..moveable(True)
+gui.SS_Form1..sizeable(False)
+gui.SS_Form1..ShowInTaskBar(True)
+gui.SS_Form1..titlebar(True)
+gui.SS_Form1.lbl_txtCust.create(label,"Customer",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtCust.create(textbox,"",True,1800,330,0,100,335,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtCust.create(button)
+gui.SS_Form1.cmd_txtCust.caption("^")
+gui.SS_Form1.cmd_txtCust.visible(True)
+gui.SS_Form1.cmd_txtCust.size(330,330)
+gui.SS_Form1.cmd_txtCust.zorder(0)
+gui.SS_Form1.cmd_txtCust.position(1985,335)
+gui.SS_Form1.cmd_txtCust.enabled(True)
+gui.SS_Form1.cmd_txtCust.fontname("Arial")
+gui.SS_Form1.cmd_txtCust.fontsize(8)
+gui.SS_Form1.cmd_txtCust.event(click,cmd_txtcust_click)
+gui.SS_Form1.lbl_txtWC.create(label,"WorkCenter",True,1800,200,1,100,750,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtWC.create(textbox,"",True,1800,330,0,100,950,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtWC.create(button)
+gui.SS_Form1.cmd_txtWC.caption("^")
+gui.SS_Form1.cmd_txtWC.visible(True)
+gui.SS_Form1.cmd_txtWC.size(330,330)
+gui.SS_Form1.cmd_txtWC.zorder(0)
+gui.SS_Form1.cmd_txtWC.position(1985,950)
+gui.SS_Form1.cmd_txtWC.enabled(True)
+gui.SS_Form1.cmd_txtWC.fontname("Arial")
+gui.SS_Form1.cmd_txtWC.fontsize(8)
+gui.SS_Form1.cmd_txtWC.event(click,cmd_txtwc_click)
+gui.SS_Form1.lbl_txtCap.create(label,"Capacity Hour",True,1800,200,1,100,1365,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtCap.create(textbox,"",True,1800,330,0,100,1565,True,0,Arial,8,16777215,1)
+gui.SS_Form1.lbl_dtpFrom.create(label,"From",True,1800,200,1,100,1980,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.dtpFrom.create(datepicker)
+gui.SS_Form1.dtpFrom.visible(True)
+gui.SS_Form1.dtpFrom.size(1800,345)
+gui.SS_Form1.dtpFrom.zorder(0)
+gui.SS_Form1.dtpFrom.position(100,2180)
+gui.SS_Form1.dtpFrom.enabled(True)
+gui.SS_Form1.dtpFrom.checkbox(False)
+gui.SS_Form1.lbl_dtpTo.create(label,"To",True,1800,200,1,1985,1980,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.dtpTo.create(datepicker)
+gui.SS_Form1.dtpTo.visible(True)
+gui.SS_Form1.dtpTo.size(1800,345)
+gui.SS_Form1.dtpTo.zorder(0)
+gui.SS_Form1.dtpTo.position(1985,2180)
+gui.SS_Form1.dtpTo.enabled(True)
+gui.SS_Form1.dtpTo.checkbox(False)
+gui.SS_Form1.chkAll.create(checkbox)
+gui.SS_Form1.chkAll.caption("All Dates")
+gui.SS_Form1.chkAll.visible(True)
+gui.SS_Form1.chkAll.size(1800,300)
+gui.SS_Form1.chkAll.zorder(0)
+gui.SS_Form1.chkAll.position(100,2695)
+gui.SS_Form1.chkAll.enabled(True)
+gui.SS_Form1.chkAll.alignment(0)
+gui.SS_Form1.chkAll.fontname("Arial")
+gui.SS_Form1.chkAll.fontsize(8)
+gui.SS_Form1.cmdSubmit.create(button)
+gui.SS_Form1.cmdSubmit.caption("Submit")
+gui.SS_Form1.cmdSubmit.visible(True)
+gui.SS_Form1.cmdSubmit.size(1000,360)
+gui.SS_Form1.cmdSubmit.zorder(0)
+gui.SS_Form1.cmdSubmit.position(100,3080)
+gui.SS_Form1.cmdSubmit.enabled(True)
+gui.SS_Form1.cmdSubmit.fontname("Arial")
+gui.SS_Form1.cmdSubmit.fontsize(8)
+gui.SS_Form1.cmdSubmit.event(click,cmdsubmit_click)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.Global.sCust.Declare(String)
+Variable.Global.sWC.Declare(String)
+Variable.Global.sHours.Declare(String)
+Variable.UDT.uReport.Define("Capacity",String)
+Variable.UDT.uReport.Define("Job",String,JOB)
+Variable.UDT.uReport.Define("Suffix",String,SUFFIX)
+Variable.UDT.uReport.Define("Seq",String,SEQ)
+Variable.UDT.uReport.Define("WC",String,WC)
+Variable.UDT.uReport.Define("Customer",String,CUSTOMER)
+Variable.UDT.uReport.Define("Customer_PO",String,CUSTOMER_PO)
+Variable.UDT.uReport.Define("Hours_actual",String,HOURS_ACTUAL)
+Variable.UDT.uReport.Define("Hours_Est",String,HOURS_ESTIMATED)
+Variable.UDT.uReport.Define("Part",String,PART)
+Variable.UDT.uReport.Define("Priority",String,PRIORITY)
+Variable.UDT.uReport.Define("Name_Customer",String)
+Variable.UDT.uReport.Define("Sales_Order",String,SALES_ORDER)
+Variable.UDT.uReport.Define("Sales_Order_Line",String,SALES_ORDER_LINE)
+Variable.UDT.uReport.Define("Order_Qty",String,QTY_ORDER)
+Variable.UDT.uReport.Define("WC_Name",String)
+Variable.UDT.uReport.Define("Terminal",String)
+Variable.UDT.uReport.Define("BeginWeek",Date)
+Variable.UDT.uReport.Define("Total",Float)
+Variable.UDT.uReport.Define("Req_Total",Float)
+Variable.UDT.uReport.Define("Actual_Total",Float)
+Variable.UDT.uReport.Define("Remaining_Hrs",Float)
+Variable.UDT.uReport.Define("Balancing_Hrs",Float)
+Variable.UDT.uReport.Define("Remain_Total",String)
+Variable.UDT.uReport.Define("Sort",String)
+Variable.UDT.uReport.Define("Promise_date",Date,DATE_DUE,mmddyyyy)
+Variable.uGlobal.uReport.Declare("uReport")
+Variable.UDT.uCustomer.Define("Customer",String,CUSTOMER)
+Variable.UDT.uCustomer.Define("Name_Customer",String,NAME_CUSTOMER)
+Variable.uGlobal.uCustomer.Declare("uCustomer")
+Variable.UDT.uWC.Define("Machine",String,MACHINE)
+Variable.UDT.uWC.Define("WC_Name",String,WC_NAME)
+Variable.uGlobal.uWC.Declare("uWC")
+Variable.Global.sFrom.Declare(String)
+Variable.Global.sTo.Declare(String)
+Variable.UDT.uCheck.Define("Part",String)
+Variable.UDT.uCheck.Define("SO",String)
+Variable.UDT.uCheck.Define("PO",String)
+Variable.uGlobal.uCheck.Declare("uCheck")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+'Quote 3373
+'ERM
+
+
+F.ODBC.Connection!con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+'Gui.SS_Form1.txtCust.Text("KATOEN")
+'Gui.SS_Form1.txtWC.Text("WD10")
+'Gui.SS_Form1.txtCap.Text("270")
+Gui.SS_Form1..Show
+'F.Intrinsic.Control.CallSub(Modify_quote)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3081_CP_REPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+F.ODBC.Connection!con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+program.sub.cmd_txtcust_click.start
+F.Intrinsic.Control.SetErrorHandler("cmd_txtcust_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser(205,"",V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	Gui.SS_Form1.txtCust.Text(V.Local.sRet.Trim)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd_txtcust_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3081_CP_REPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmd_txtcust_click.end
+
+program.sub.cmd_txtwc_click.start
+F.Intrinsic.Control.SetErrorHandler("cmd_txtwc_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser(400,"",V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	Gui.SS_Form1.txtWC.Text(V.Local.sRet.Trim)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd_txtwc_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3081_CP_REPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmd_txtwc_click.end
+
+program.sub.cmdsubmit_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdsubmit_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.iSort.Declare(Long)
+V.Local.i.Declare(Long)
+V.Local.dDate.Declare(Date)
+V.Local.bCheck.Declare(Boolean,False)
+V.Local.dBeginDate.Declare(Date)
+V.Local.sReq.Declare(String)
+V.Local.sActual.Declare(String)
+V.Local.sRemain.Declare(String)
+V.Local.sTotal.Declare(String)
+V.Local.sSort.Declare(String)
+V.Local.sLine.Declare(String)
+V.Local.iUB.Declare(Long)
+V.Local.fTemp.Declare(Float)
+V.Local.iUpperBound.Declare(Long)
+V.Local.sQuery.Declare(String)
+V.Local.fFirstShipment.Declare(Float)
+V.Local.bFirstShipment.Declare(Boolean,False)
+V.Local.fNewQtyOrd.Declare(Float)
+V.Local.fNewHrsEst.Declare(Float)
+V.Local.fHoursActual.Declare(Float)
+V.Local.sSO.Declare(String)
+V.Local.sSOLine.Declare(String)
+
+V.uGlobal.uCheck.Redim(-1,-1)
+V.Local.iSort.Set(0)
+V.Global.sCust.Set(V.Screen.SS_Form1!txtCust.Text)
+V.Global.sWC.Set(V.Screen.SS_Form1!txtWC.Text)
+V.Global.sHours.Set(V.Screen.SS_Form1!txtCap.Text)
+F.Intrinsic.String.Format(V.Screen.SS_Form1!dtpFrom.Value,"mmddyy",V.Global.sFrom)
+F.Intrinsic.String.Format(V.Screen.SS_Form1!dtpTo.Value,"mmddyy",V.Global.sTo)
+
+
+'--------------------------------Gather data from table and load into UDTs -----------------------------------------------------
+F.Intrinsic.String.Concat("select Machine, WC_Name From WORKCENTERS where Machine = '",V.Global.sWC.Trim,"'",V.Local.sSQL)
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Variable.LoadUDTFromRecordset("con","rst","v.uGlobal.uWC",False)
+F.ODBC.con!rst.Close
+F.Intrinsic.String.Concat("Select Customer, Name_Customer From V_CUSTOMER_MASTER where Customer = '",V.Global.sCust.Trim,"'",V.Local.sSQL)
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Variable.LoadUDTFromRecordset("con","rst","v.uGlobal.uCustomer",False)
+F.ODBC.con!rst.Close
+F.Intrinsic.Variable.SetUDTFieldDateMask(V.uGlobal.uReport!Promise_date,"MMDDYYYY")
+
+F.Intrinsic.Control.If(V.Screen.SS_Form1!chkAll.Value,=,1)
+	'F.Intrinsic.String.Concat("select job_header.job,job_header.suffix,seq,job_header.part,customer,customer_po,priority,hours_actual,hours_estimated,job_operations.part as WC, job_header.date_due,sales_order,sales_order_line,job_header.qty_order from Job_Header left join Job_Operations on job_header.job = job_operations.job and job_header.suffix = job_operations.suffix where customer = '",V.Global.sCust,"' and job_operations.part = '",V.Global.sWC,"' and job_operations.LMO='L' and Date_Closed = '000000'","",V.Local.sSQL)
+	F.Intrinsic.String.Concat("select job_header.job,job_header.suffix,seq,job_header.part,customer,customer_po,priority,hours_actual,hours_estimated,job_operations.part as WC, job_header.date_due,sales_order,sales_order_line,job_header.qty_order from Job_Header left join Job_Operations on job_header.job = job_operations.job and job_header.suffix = job_operations.suffix where customer = '",V.Global.sCust,"' and job_operations.part = '",V.Global.sWC,"' and job_operations.LMO = 'L' and Date_Closed = '000000'",V.Local.sSQL)
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Concat("select job_header.job,job_header.suffix,seq,job_header.part,customer,customer_po,priority,hours_actual,hours_estimated,job_operations.part as WC, job_header.date_due,sales_order,sales_order_line,job_header.qty_order from Job_Header left join Job_Operations on job_header.job = job_operations.job and job_header.suffix = job_operations.suffix where job_header.date_due between '",V.Global.sFrom,"' and '",V.Global.sTo,"' and customer = '",V.Global.sCust,"' and job_operations.part = '",V.Global.sWC,"' and job_operations.LMO = 'L' and Date_Closed = '000000'",V.Local.sSQL)
+F.Intrinsic.Control.EndIf
+
+'F.Intrinsic.Debug.InvokeDebuggerF.Intrinsic.Debug.Stop
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+	F.Intrinsic.Variable.LoadUDTFromRecordset("con","rst","v.uGlobal.uReport",False)
+F.Intrinsic.Control.EndIf
+F.ODBC.con!rst.Close
+
+F.Intrinsic.Variable.UDTMultiSeekSet(V.uGlobal.uReport!Customer,V.uGlobal.uCustomer!Customer,V.uGlobal.uReport!Name_Customer,V.uGlobal.uCustomer!Name_Customer)
+F.Intrinsic.Variable.UDTMultiSeekSet(V.uGlobal.uReport!WC,V.uGlobal.uWC!Machine,V.uGlobal.uReport!WC_Name,V.uGlobal.uWC!WC_Name)
+F.Intrinsic.Variable.UDTSetMemberValue(V.uGlobal.uReport!Terminal,V.Caller.Terminal)
+F.Intrinsic.Variable.UDTSetMemberValue(V.uGlobal.uReport!Capacity,V.Global.sHours)
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uReport!Promise_date,0,V.uGlobal.uReport!Sales_Order,0,V.uGlobal.uReport!Sales_Order_Line,0)
+
+'------------------Load Table from UDT----------------------------------
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Terminal,"TERMINAL")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Capacity,"CAPACITY")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Name_Customer,"NAME_CUSTOMER")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!WC_Name,"WC_NAME")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!WC,"MACHINE")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Sales_Order,"ORDER_NO")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Sales_Order_Line,"RECORD_NO")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Order_Qty,"QTY_ORDERED")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Promise_date,"PROMISE_DATE")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Sort,"SORT")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!BeginWeek,"WEEK")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Total,"RUNNING_TOTAL")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Req_Total,"REQ_TOTAL")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Actual_Total,"ACTUAL_TOTAL")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Remaining_Hrs,"REMAINING_HRS")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Balancing_Hrs,"BALANCING_HRS")
+F.Intrinsic.Variable.SetUDTFieldReference(V.uGlobal.uReport!Remain_Total,"REMAINING_TOTAL")
+'F.Intrinsic.Debug.InvokeDebugger
+'F.Intrinsic.Debug.Stop
+
+'remove salesorders with 000000
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uReport.LBound,V.uGlobal.uReport.UBound,1)
+	F.Intrinsic.Control.If(V.uGlobal.uReport(v.Local.i)!Sales_Order,=,"0000000")
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uReport!Sales_Order,V.uGlobal.uReport(v.Local.i)!Sales_Order,V.uGlobal.uReport!Part,V.uGlobal.uReport(v.Local.i)!PART)
+		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uReport!JOB,V.uGlobal.uReport(v.Local.i)!Job,V.uGlobal.uReport!Suffix,"000",V.Local.sRet)
+		F.Intrinsic.Math.Add(V.uGlobal.uReport(V.Local.sRet)!Order_Qty,V.uGlobal.uReport(v.Local.i)!Order_Qty,V.Local.fNewQtyOrd)
+		F.Intrinsic.Math.Add(V.uGlobal.uReport(V.Local.sRet)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_Est,V.Local.fNewHrsEst)
+		F.Intrinsic.Math.Add(V.uGlobal.uReport(v.Local.sRet)!Hours_actual,V.uGlobal.uReport(v.Local.i)!Hours_actual,V.Local.fHoursActual)
+		V.uGlobal.uReport(v.Local.sRet)!Order_Qty.Set(V.Local.fNewQtyOrd)
+		V.uGlobal.uReport(v.Local.sRet)!Hours_Est.Set(V.Local.fNewHrsEst)
+		V.uGlobal.uReport(v.Local.sRet)!Hours_actual.Set(V.Local.fHoursActual)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.i)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uReport)
+
+'Add items from ship sched
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uReport!Promise_date,0,V.uGlobal.uReport!Sales_Order,0,V.uGlobal.uReport!Sales_Order_Line,0)
+V.Local.iUpperBound.Set(V.uGlobal.uReport.UBound)
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uReport.LBound,V.Local.iUpperBound,1)
+	F.Intrinsic.Control.If(V.uGlobal.uReport(v.Local.i)!Suffix,=,"000")
+		F.Intrinsic.String.RPad(V.uGlobal.uReport(v.Local.i)!Sales_Order_Line,0,4,V.Local.sLine)
+		F.Intrinsic.String.Concat("Select * From V_OE_SHIP_SCHED Where ORDER_NO = '",V.uGlobal.uReport(v.Local.i)!Sales_Order,"' and ORDER_LINE = '",V.Local.sLine,"'",V.Local.sSQL)
+		F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+		F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+			F.Intrinsic.Math.Mult(V.uGlobal.uReport(v.Local.i)!Order_Qty,V.uGlobal.uReport(v.Local.i)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_Est)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uReport!Sales_Order,V.ODBC.con!rst.FieldValTrim!ORDER_NO,V.uGlobal.uReport!Sales_Order_Line,V.uGlobal.uReport(v.Local.i)!Sales_Order_Line)
+			F.Intrinsic.Control.DoUntil(V.ODBC.con!rst.EOF,=,True)
+				V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+				F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+				V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+				V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+				V.uGlobal.uReport(v.Local.iUB)!Capacity.Set(V.uGlobal.uReport(v.Local.i)!Capacity)
+				V.uGlobal.uReport(v.Local.iUB)!Job.Set(V.uGlobal.uReport(v.Local.i)!Job)
+				V.uGlobal.uReport(v.Local.iUB)!Suffix.Set(V.uGlobal.uReport(v.Local.i)!Suffix)
+				V.uGlobal.uReport(v.Local.iUB)!Seq.Set(V.uGlobal.uReport(v.Local.i)!Seq)
+				V.uGlobal.uReport(v.Local.iUB)!Part.Set(V.uGlobal.uReport(v.Local.i)!Part)
+				V.uGlobal.uReport(v.Local.iUB)!Customer.Set(V.uGlobal.uReport(v.Local.i)!Customer)
+				V.uGlobal.uReport(v.Local.iUB)!Name_Customer.Set(V.uGlobal.uReport(v.Local.i)!Name_Customer)
+				V.uGlobal.uReport(v.Local.iUB)!Customer_PO.Set(V.uGlobal.uReport(v.Local.i)!Customer_PO)
+				V.uGlobal.uReport(v.Local.iUB)!Priority.Set(V.uGlobal.uReport(v.Local.i)!Priority)
+				V.uGlobal.uReport(v.Local.iUB)!Hours_actual.Set(V.uGlobal.uReport(v.Local.i)!Hours_actual)
+				F.Intrinsic.Math.Mult(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.ODBC.con!rst.FieldValFloat!QTY_SCHED,V.Local.fTemp)
+				V.uGlobal.uReport(v.Local.iUB)!Hours_Est.Set(V.Local.fTemp)
+				V.uGlobal.uReport(v.Local.iUB)!WC.Set(V.uGlobal.uReport(v.Local.i)!WC)
+				V.uGlobal.uReport(v.Local.iUB)!WC_Name.Set(V.uGlobal.uReport(v.Local.i)!WC_Name)
+				V.uGlobal.uReport(v.Local.iUB)!Promise_date.Set(V.ODBC.con!rst.FieldValTRIM!DATE_DUE)
+				V.uGlobal.uReport(v.Local.iUB)!Sales_Order.Set(V.uGlobal.uReport(v.Local.i)!Sales_Order)
+				V.uGlobal.uReport(v.Local.iUB)!Sales_Order_Line.Set(V.uGlobal.uReport(v.Local.i)!Sales_Order_Line)
+				V.uGlobal.uReport(v.Local.iUB)!Order_Qty.Set(V.ODBC.con!rst.FieldValFloat!QTY_SCHED)
+				F.ODBC.con!rst.MoveNext
+			F.Intrinsic.Control.Loop
+		F.Intrinsic.Control.EndIf
+		F.ODBC.con!rst.Close
+	F.Intrinsic.Control.ElseIf(V.uGlobal.uReport(v.Local.i)!Suffix,=,"")
+		F.Intrinsic.String.RPad(V.uGlobal.uReport(v.Local.i)!Sales_Order_Line,0,4,V.Local.sLine)
+		F.Intrinsic.String.Concat("Select * From V_OE_SHIP_SCHED Where ORDER_NO = '",V.uGlobal.uReport(v.Local.i)!Sales_Order,"' and ORDER_LINE = '",V.Local.sLine,"'",V.Local.sSQL)
+		F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+		F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+			F.Intrinsic.Math.Mult(V.uGlobal.uReport(v.Local.i)!Order_Qty,V.uGlobal.uReport(v.Local.i)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_Est)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uReport!Sales_Order,V.ODBC.con!rst.FieldValTrim!ORDER_NO,V.uGlobal.uReport!Sales_Order_Line,V.uGlobal.uReport(v.Local.i)!Sales_Order_Line)
+			F.Intrinsic.Control.DoUntil(V.ODBC.con!rst.EOF,=,True)
+				V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+				F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+				V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+				V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+				V.uGlobal.uReport(v.Local.iUB)!Capacity.Set(V.uGlobal.uReport(v.Local.i)!Capacity)
+				V.uGlobal.uReport(v.Local.iUB)!Job.Set(V.uGlobal.uReport(v.Local.i)!Job)
+				V.uGlobal.uReport(v.Local.iUB)!Suffix.Set(V.uGlobal.uReport(v.Local.i)!Suffix)
+				V.uGlobal.uReport(v.Local.iUB)!Seq.Set(V.uGlobal.uReport(v.Local.i)!Seq)
+				V.uGlobal.uReport(v.Local.iUB)!Part.Set(V.uGlobal.uReport(v.Local.i)!Part)
+				V.uGlobal.uReport(v.Local.iUB)!Customer.Set(V.uGlobal.uReport(v.Local.i)!Customer)
+				V.uGlobal.uReport(v.Local.iUB)!Name_Customer.Set(V.uGlobal.uReport(v.Local.i)!Name_Customer)
+				V.uGlobal.uReport(v.Local.iUB)!Customer_PO.Set(V.uGlobal.uReport(v.Local.i)!Customer_PO)
+				V.uGlobal.uReport(v.Local.iUB)!Priority.Set(V.uGlobal.uReport(v.Local.i)!Priority)
+				V.uGlobal.uReport(v.Local.iUB)!Hours_actual.Set(V.uGlobal.uReport(v.Local.i)!Hours_actual)
+				F.Intrinsic.Math.Mult(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.ODBC.con!rst.FieldValFloat!QTY_SCHED,V.Local.fTemp)
+				V.uGlobal.uReport(v.Local.iUB)!Hours_Est.Set(V.Local.fTemp)
+				V.uGlobal.uReport(v.Local.iUB)!WC.Set(V.uGlobal.uReport(v.Local.i)!WC)
+				V.uGlobal.uReport(v.Local.iUB)!WC_Name.Set(V.uGlobal.uReport(v.Local.i)!WC_Name)
+				V.uGlobal.uReport(v.Local.iUB)!Promise_date.Set(V.ODBC.con!rst.FieldValTRIM!DATE_DUE)
+				V.uGlobal.uReport(v.Local.iUB)!Sales_Order.Set(V.uGlobal.uReport(v.Local.i)!Sales_Order)
+				V.uGlobal.uReport(v.Local.iUB)!Sales_Order_Line.Set(V.uGlobal.uReport(v.Local.i)!Sales_Order_Line)
+				V.uGlobal.uReport(v.Local.iUB)!Order_Qty.Set(V.ODBC.con!rst.FieldValFloat!QTY_SCHED)
+				F.ODBC.con!rst.MoveNext
+			F.Intrinsic.Control.Loop
+		F.Intrinsic.Control.EndIf
+		F.ODBC.con!rst.Close
+	'F.Intrinsic.Control.Else
+	F.Intrinsic.Control.EndIf
+	'Delete flagged UDTs
+F.Intrinsic.Control.Next(V.Local.i)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uReport)
+
+'F.Intrinsic.Debug.InvokeDebugger
+'F.Intrinsic.Debug.Stop
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uReport!Sales_Order,0,V.uGlobal.uReport!Sales_Order_Line,0,V.uGlobal.uReport!Promise_date,0)
+
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uReport.LBound,V.uGlobal.uReport.UBound,1)
+	F.Intrinsic.Control.If(V.Local.bCheck,=,True)
+		F.Intrinsic.String.Concat(V.uGlobal.uReport(v.Local.i)!Sales_Order,V.uGlobal.uReport(v.Local.i)!Sales_Order_Line,V.Local.sSOLine)
+		F.Intrinsic.Control.If(V.Local.sSO,=,V.Local.sSOLine)
+			V.uGlobal.uReport(v.Local.i)!Hours_actual.Set(0)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Concat(V.uGlobal.uReport(v.Local.i)!Sales_Order,V.uGlobal.uReport(v.Local.i)!Sales_Order_Line,V.Local.sSO)
+	F.Intrinsic.Control.Else
+		V.Local.bCheck.Set(True)
+		F.Intrinsic.String.Concat(V.uGlobal.uReport(v.Local.i)!Sales_Order,V.uGlobal.uReport(v.Local.i)!Sales_Order_Line,V.Local.sSO)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.i)
+
+V.Local.bCheck.Set(False)
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uReport!Promise_date,0)
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uReport.LBound,V.uGlobal.uReport.UBound,1)
+	F.Intrinsic.Control.If(V.Local.bCheck,=,True)
+		F.Intrinsic.Date.BeginningOfWeek(V.uGlobal.uReport(v.Local.i)!Promise_date,V.Local.dDate)
+		V.uGlobal.uReport(v.Local.i)!BeginWeek.Set(V.Local.dDate)
+		F.Intrinsic.Math.Sub(V.Local.i,1,V.Local.i)
+		V.Local.dBeginDate.Set(V.uGlobal.uReport(v.Local.i)!BeginWeek)
+		F.Intrinsic.Control.If(V.Local.dBeginDate,=,V.Local.dDate)
+			F.Intrinsic.Math.Add(V.Local.i,1,V.Local.i)
+			V.uGlobal.uReport(v.Local.i)!Sort.Set(V.Local.sSort)
+			'Remaing Hrs
+			F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_actual,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			'Absolute value, no negatives for remaining hrs
+			F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			'weekly required hrs total
+			F.Intrinsic.Math.Add(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.Local.sReq,V.uGlobal.uReport(v.Local.i)!Req_Total)
+			'weekly worked hrs total
+			F.Intrinsic.Math.Add(V.uGlobal.uReport(v.Local.i)!Hours_actual,V.Local.sActual,V.uGlobal.uReport(v.Local.i)!Actual_Total)
+			'weekly remaining hrs
+			F.Intrinsic.Math.Add(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs,V.Local.sRemain,V.uGlobal.uReport(v.Local.i)!Remain_Total)
+			V.Local.sRemain.Set(V.uGlobal.uReport(v.Local.i)!Remain_Total)
+			V.Local.sActual.Set(V.uGlobal.uReport(v.Local.i)!Actual_Total)
+			V.Local.sReq.Set(V.uGlobal.uReport(v.Local.i)!Req_Total)
+			'last line on report - balancing hrs and run total should be the same numbers
+			F.Intrinsic.Control.If(V.uGlobal.uReport.UBound,=,V.Local.i)
+				F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Capacity,V.uGlobal.uReport(v.Local.i)!Remain_Total,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+				F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+				F.Intrinsic.Math.Add(V.Local.sTotal,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Total)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.Else
+			'F.Intrinsic.Debug.Stop
+			'calculate previous week remaining, worked, and remaining hrs
+			F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Req_Total,V.uGlobal.uReport(v.Local.i)!Actual_Total,V.uGlobal.uReport(v.Local.i)!Remain_Total)
+			'F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Remain_Total,V.uGlobal.uReport(v.Local.i)!Remain_Total)
+			F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Capacity,V.uGlobal.uReport(v.Local.i)!Remain_Total,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+			F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+			F.Intrinsic.Control.If(V.uGlobal.uReport(v.Local.i)!Sort,=,001)
+				V.uGlobal.uReport(v.Local.i)!Total.Set(V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+				V.Local.sTotal.Set(V.uGlobal.uReport(v.Local.i)!Total)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.Math.Add(V.Local.sTotal,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Total)
+				V.Local.sTotal.Set(V.uGlobal.uReport(v.Local.i)!Total)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.Math.Add(V.Local.i,1,V.Local.i)
+			F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_actual,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			V.uGlobal.uReport(v.Local.i)!Remain_Total.Set(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			V.uGlobal.uReport(v.Local.i)!Req_Total.Set(V.uGlobal.uReport(v.Local.i)!Hours_Est)
+			V.uGlobal.uReport(v.Local.i)!Actual_Total.Set(V.uGlobal.uReport(v.Local.i)!Hours_Actual)
+			V.Local.sRemain.Set(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+			V.Local.sActual.Set(V.uGlobal.uReport(v.Local.i)!Hours_actual)
+			V.Local.sReq.Set(V.uGlobal.uReport(v.Local.i)!Hours_Est)
+			F.Intrinsic.Math.Add(V.Local.iSort,1,V.Local.iSort)
+			F.Intrinsic.String.LPad(V.Local.iSort,"0",3,V.Local.sSort)
+			V.uGlobal.uReport(v.Local.i)!Sort.Set(V.Local.sSort)
+			F.Intrinsic.Control.If(V.uGlobal.uReport.UBound,=,V.Local.i)
+				F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Capacity,V.uGlobal.uReport(v.Local.i)!Remain_Total,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+				F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs)
+				F.Intrinsic.Math.Add(V.Local.sTotal,V.uGlobal.uReport(v.Local.i)!Balancing_Hrs,V.uGlobal.uReport(v.Local.i)!Total)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Else
+		'F.Intrinsic.Debug.Stop
+		F.Intrinsic.Date.BeginningOfWeek(V.uGlobal.uReport(v.Local.i)!Promise_date,V.Local.dDate)
+		V.uGlobal.uReport(v.Local.i)!BeginWeek.Set(V.Local.dDate)
+		F.Intrinsic.Math.Sub(V.uGlobal.uReport(v.Local.i)!Hours_Est,V.uGlobal.uReport(v.Local.i)!Hours_actual,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+		F.Intrinsic.Math.Abs(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs,V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+		V.uGlobal.uReport(v.Local.i)!Req_Total.Set(V.uGlobal.uReport(v.Local.i)!Hours_Est)
+		V.uGlobal.uReport(v.Local.i)!Actual_Total.Set(V.uGlobal.uReport(v.Local.i)!Hours_Actual)
+		V.uGlobal.uReport(v.Local.i)!Remain_Total.Set(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+		V.Local.sRemain.Set(V.uGlobal.uReport(v.Local.i)!Remaining_Hrs)
+		V.Local.sActual.Set(V.uGlobal.uReport(v.Local.i)!Hours_actual)
+		V.Local.sReq.Set(V.uGlobal.uReport(v.Local.i)!Hours_Est)
+		F.Intrinsic.Math.Add(V.Local.iSort,1,V.Local.iSort)
+		F.Intrinsic.String.LPad(V.Local.iSort,"0",3,V.Local.sSort)
+		V.uGlobal.uReport(v.Local.i)!Sort.Set(V.Local.sSort)
+		V.Local.bCheck.Set(True)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.i)
+
+F.Intrinsic.String.Concat("Delete from GCG_3081_CP_REPORT Where Terminal = '",V.Caller.Terminal,"'",V.Local.sSQL)
+F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+
+F.Intrinsic.Control.If(V.uGlobal.uReport.UBound,<>,-1)
+	F.Intrinsic.String.Concat("Select * From GCG_3081_CP_REPORT Where Terminal = '",V.Caller.Terminal,"'",V.Local.sSQL)
+	F.ODBC.Connection!con.OpenRecordsetRW("rstSave",V.Local.sSQL)
+	F.Intrinsic.Variable.SaveUDTToRecordset("con","rstSave","V.uGlobal.uReport")
+	F.ODBC.con!rstSave.Close
+F.Intrinsic.Control.EndIf
+
+
+
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uReport.LBound,V.uGlobal.uReport.UBound,1)
+	F.Intrinsic.Control.If(V.uGlobal.uReport(v.Local.i)!Total,<>,"")
+		F.Intrinsic.String.Concat("UPDATE GCG_3081_CP_REPORT SET RUNNING_TOTAL = '",V.uGlobal.uReport(v.Local.i)!Total,"' Where Terminal = '",V.Caller.Terminal,"' and SORT = '",V.uGlobal.uReport(v.Local.i)!Sort,"'",V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.i)
+
+F.Intrinsic.Control.CallSub(Report)
+
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdsubmit_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3081_CP_REPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdsubmit_click.end
+
+Program.Sub.Report.Start
+F.Intrinsic.Control.SetErrorHandler("Report_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sParam.Declare(String)
+V.Local.sParamVal.Declare(String)
+V.Local.sReportName.Declare(String)
+V.Local.iReport.Declare(Long)
+
+V.Local.sParam.Set("Terminal")
+V.Local.sParamVal.Set(V.Caller.Terminal)
+F.Global.BI.GetIDFromName("GCG_3081_CP_RPT.rpt",V.Local.iReport)
+F.Global.BI.PrintReport(V.Local.iReport,0,V.Local.sParam,V.Local.sParamVal,"",False)
+F.Intrinsic.Control.CallSub(Unload)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Report_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3081_CP_REPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Report.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_CP_REPORT$}$ERIC$}$3/26/2012
+Program.Sub.Comments.End
+Program.Sub.ScreenSS.Start
+SS_Form1{{CAPTION::Capacity Planning/Schedule
+SS_Form1.CTRL{{NAME::txtCust\\TYPE::2\\CAPTION::Customer\\GROUP::-1\\BROWSER::1\\SIZE::1
+SS_Form1.CTRL{{NAME::txtWC\\TYPE::2\\CAPTION::WorkCenter\\GROUP::-1\\BROWSER::1\\SIZE::1
+SS_Form1.CTRL{{NAME::txtCap\\TYPE::2\\CAPTION::Capacity Hour\\GROUP::-1\\BROWSER::0\\SIZE::1
+SS_Form1.CTRL{{NAME::dtpFrom\\TYPE::6\\CAPTION::From\\GROUP::1\\BROWSER::0\\SIZE::1
+SS_Form1.CTRL{{NAME::dtpTo\\TYPE::6\\CAPTION::To\\GROUP::1\\BROWSER::0\\SIZE::1
+SS_Form1.CTRL{{NAME::chkAll\\TYPE::9\\CAPTION::All Dates\\GROUP::-1\\BROWSER::0\\SIZE::1
+SS_Form1.CTRL{{NAME::cmdSubmit\\TYPE::5\\CAPTION::Submit\\GROUP::-1\\BROWSER::0\\SIZE::1
+
+Program.Sub.ScreenSS.End
+
